@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
  */
 public class CLIView {
     
-    private Board board = new Board();
-    private Player player = new Player();
+    public Board board = new Board();
+    public Player player = new Player();
     
-    private void displayBoard(Board board){
+    public void displayBoard(Board board){
         
         int[][] b = board.getBoard();
         System.out.println("Live Ships: " + board.getShipsOnBoard());
@@ -58,7 +58,7 @@ public class CLIView {
         System.out.println("     --------------------------------");
     }
     
-    private String askPlayerName(){
+    public String askPlayerName(){
         Scanner scanner = new Scanner(System.in);
         
         System.out.println("Enter Player Name: ");
@@ -67,7 +67,7 @@ public class CLIView {
         
     }
     
-    private int askShipPlacementMode(){
+    public int askShipPlacementMode(){
         int mode;
         do{
             Scanner scanner = new Scanner(System.in);
@@ -81,7 +81,7 @@ public class CLIView {
         return mode;
     }
     
-    private int confirmFileRead(){
+    public int confirmFileRead(){
         
         int confirm = 0;
         System.out.println("To load ship's configuration from file. There is a file named placement.txt in project's root directory.");
@@ -96,7 +96,7 @@ public class CLIView {
         
     }
     
-    private boolean loadShipsFromFile(){
+    public boolean loadShipsFromFile(){
         String filePath = "placement.txt";
         
         int shipOflengthFive = 1;
@@ -173,12 +173,12 @@ public class CLIView {
         return true;
     }
     
-    private void displayGameOver(Player p){
+    public void displayGameOver(Player p){
         System.out.println("Game Complete");
         System.out.println("Player Name: " + p.getName());
         System.out.println("Total tries: " + p.getTries());
     }
-    private boolean formatCheck(String input){
+    public boolean formatCheck(String input){
         
         String regex = "(?i)^[A-J]([1-9]|10)$";
         Pattern pattern = Pattern.compile(regex);
@@ -186,7 +186,7 @@ public class CLIView {
         return matcher.matches();
     }
     
-    private String askTry(){
+    public String askTry(){
         
         boolean correctInput = true;
         String coOrdinates;
@@ -207,7 +207,7 @@ public class CLIView {
         
     }
     
-    private int[] convertToCoordinate(String input){
+    public int[] convertToCoordinate(String input){
         input = input.toUpperCase();
         char column = input.charAt(0);
         int row = Integer.parseInt(input.substring(1));
@@ -217,40 +217,4 @@ public class CLIView {
         return coordinates;
     }
        
-    public static void main(String [] arg){
-        
-        
-        
-        Scanner scanner = new Scanner(System.in);
-        CLIView cli = new CLIView();        
-        String playerName = cli.askPlayerName();
-        cli.player.setName(playerName);
-        
-        int shipPlacement = cli.askShipPlacementMode();
-        if(shipPlacement == 2){
-            do{
-                cli.confirmFileRead();
-            }
-            while(!cli.loadShipsFromFile());
-        }
-        else{
-            cli.board.placeRandomlyAllShips();
-        }
-        
-        cli.displayBoard(cli.board);
-        
-        do{
-            String attack = cli.askTry();
-            int [] coordinates = cli.convertToCoordinate(attack);
-            cli.player.setTries(cli.player.getTries() + 1);
-            cli.board.attack(coordinates[0], coordinates[1]);
-            cli.displayBoard(cli.board);
-        }
-        while(!cli.board.isGameOver());
-        
-        cli.displayGameOver(cli.player);
-        
-        
-       
-    }
 }
